@@ -1,11 +1,24 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import pandas as pd
 
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 ''' PROJECT DASHBOARD
 '''
+
+df = pd.read_csv('gem_temp.csv', delimiter=';')
+
+def generate_table(dataframe, max_rows=5):
+    return html.Table(
+        [html.Tr([html.Th(col) for col in dataframe.columns])] +
+
+        [html.Tr([
+            html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+        ]) for i in range(min(len(dataframe), max_rows))]
+    , style={'text-align':'center'})
+
 
 app = dash.Dash(__name__)
 
@@ -32,7 +45,95 @@ app.layout = html.Div([
 
                 dcc.Tab(
                     label='Data',
-                    value='data_tab'
+                    value='data_tab',
+                    children=[
+                        # row 1
+                        html.Div([
+                            html.Div([
+
+                                html.P('Huidige temperatuur'),
+
+                                html.Span('16°C.', id='temperatuur_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'200px', 'width':'32.65%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            ),
+
+                            html.Div([
+
+                                html.P('Huidige lichtintensiteit'),
+
+                                html.Span('135cd', id='lichtintensiteit_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'200px', 'width':'32.65%', 'float':'left','border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            ),
+
+                            html.Div([
+
+                                html.P('Huidige status'),
+
+                                html.Span('aangesloten', id='status_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'200px', 'width':'32.65%', 'float':'left','border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            )
+
+                        ],
+                        style={'display': 'table', 'width':'100%', 'margin-top':'10px'}
+                        ),
+                        # row 2
+                        html.Div([
+                            html.Div([
+
+                                html.P('Temperatuur', style={'font-size':'24px'}),
+
+                                dcc.Graph(
+                                    id='temperatuur_grafiek'
+                                )
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'600px', 'width':'49.3%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            ),
+
+                            html.Div([
+
+                                html.P('Lichtintensiteit', style={'font-size':'24px'}),
+
+                                dcc.Graph(
+                                    id='lichtintensiteit_grafiek'
+                                )
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'600px', 'width':'49.3%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            )
+                        ]
+                        ),
+                        # row 3
+                        html.Div([
+                            html.Div([
+
+                                html.P('Gemiddelde temperatuur'),
+
+                                generate_table(df)
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'400px', 'width':'49.3%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
+                            ),
+
+                            html.Div([
+
+                                html.P('Gemiddelde lichtintensiteit'),
+
+                                generate_table(df)
+
+                            ],
+                            style={'background-color':'#FFFFFF', 'height':'400px', 'width':'49.3%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%',  'text-align':'center'}
+                            )
+                        ]
+                        )
+
+                    ]
                 ),
 
                 dcc.Tab(
@@ -214,7 +315,7 @@ app.layout = html.Div([
                 )
 
             ]
-            , value='bediening_tab'
+            , value='data_tab'
         )
 
     ])
