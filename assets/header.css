@@ -1,0 +1,13 @@
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+th,
+td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #E1E1E1; }
+
+ /*
+ Alle css die gebruikt wordt binnen in de file moet hier nog worden verwerkt
+ */
