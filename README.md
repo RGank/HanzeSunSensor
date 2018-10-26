@@ -12,6 +12,7 @@ pip install dash-core-components
 
 ## C
 Op het moment kan het systeem alleen nog maar een simpele verbinding maken met de client als de client een willekeurige letter verstuurd.
+Zodra een verbinding tot stand is gekomen, dan is het mogelijk om doormiddel van verschillende letter combinaties data op te vragen.
 
 Voorbeeld:
 ```
@@ -19,6 +20,8 @@ Voorbeeld:
 [s] > Waiting for a connection..
 [c] > a
 [s] > Connected!
+[c] > s
+[s] > {type: settings, rotation: 0, temperature: 0}
 [c] > d
 [s] > Disconnected!
 [s] > Waiting for a connection..

@@ -1,3 +1,6 @@
+static int put_char(char c, FILE *stream);
+static FILE mystdout = FDEV_SETUP_STREAM(put_char, NULL, _FDEV_SETUP_WRITE);
+
 void uart_init()
 {
 	//Set baud rate
@@ -12,6 +15,17 @@ void uart_init()
 	
 	//Set frame format : asynchronous, 8 data bits, 1 stop bit, no parity
 	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+}
+
+/*
+	Function for the printf function
+	Almost identical to the transmit function
+*/
+static int put_char(char c, FILE *stream)
+{
+	loop_until_bit_is_set(UCSR0A, UDRE0); // wait for UDR to be clear
+	UDR0 = c;    //send the character
+	return 0;
 }
 
 /*
