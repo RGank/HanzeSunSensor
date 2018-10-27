@@ -15,11 +15,19 @@
 
 #define UBBRVAL 51
 
+//Temperature analog pin
+#define TEMP_PIN 0
+#define LIGHT_PIN 1
+
 #include "serial.h"
 #include "connection.h"
+#include "adc.h"
 
-int rotation;
-int temperature;
+unsigned int rotation;
+uint16_t temperature;
+uint16_t light;
+
+uint16_t adc_read(uint8_t adcx);
 
 /*
 	Print an array of characters
@@ -37,7 +45,9 @@ void writeln(char str[]){
 */
 unsigned char get_JSON_settings(void)
 {
-	printf("{type: settings, rotation: %d, temperature: %d}\r\n", rotation, temperature);
+	temperature = adc_read(TEMP_PIN);
+	light = adc_read(LIGHT_PIN);
+	printf("{type: settings, rotation: %d, temperature: %d, light_intensity: %d}\r\n", rotation, temperature, light);
 	return 0;
 }
 
@@ -45,21 +55,18 @@ void main(void)
 {
 	
 	//Init variables
-	rotation = 0;	//TODO: Get rotation from SRAM
+	rotation = 0;	//TODO: Get previous rotation from SRAM
 	temperature = 0;
+	light = 0;
 	
 	//Set DDRB as input
 	DDRB = 0xFF;
 	
-	//Initialize uart
-	uart_init();
+	adc_init();				//Init ADC
+	uart_init();			//Init UART
+	stdout = &mystdout;		//Init printf()
 	
-	//Init the ouput for printf()
-	stdout = &mystdout;
-	
-	//Start the system without a connection
 	connection_lost();
-	
 	
 	while(1){
 	
