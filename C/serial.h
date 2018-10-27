@@ -1,3 +1,5 @@
+#define UBBRVAL 51
+
 static int put_char(char c, FILE *stream);
 static FILE mystdout = FDEV_SETUP_STREAM(put_char, NULL, _FDEV_SETUP_WRITE);
 

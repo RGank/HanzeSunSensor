@@ -13,8 +13,6 @@
 #define F_CPU 16E6
 #include <util/delay.h>
 
-#define UBBRVAL 51
-
 #include "serial.h"
 #include "connection.h"
 #include "adc.h"
