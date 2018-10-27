@@ -3,7 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 
-df = pd.read_csv('gem_temp.csv', delimiter=';')
+df = pd.read_csv('myproject/gem_temp.csv', delimiter=';')
 
 def generate_table(dataframe, max_rows=5):
     return html.Table(
@@ -21,7 +21,7 @@ layout = html.Div([
 
             html.P('Huidige temperatuur'),
 
-            html.Span('16°C.', id='temperatuur_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+            html.Span(id='temperatuur_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
 
         ],
         style={'background-color':'#FFFFFF', 'height':'200px', 'width':'32.65%', 'float':'left', 'border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}
@@ -31,7 +31,7 @@ layout = html.Div([
 
             html.P('Huidige lichtintensiteit'),
 
-            html.Span('135cd', id='lichtintensiteit_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+            html.Span(id='lichtintensiteit_data', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
 
         ],
         style={'background-color':'#FFFFFF', 'height':'200px', 'width':'32.65%', 'float':'left','border':'0.1vw solid #C8D4E3', 'margin':'0.25%', 'text-align':'center'}

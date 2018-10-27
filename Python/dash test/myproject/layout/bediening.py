@@ -2,7 +2,8 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-import visuals
+import time
+
 
 layout = html.Div([
 
@@ -133,7 +134,7 @@ layout = html.Div([
 
             html.P('Huidige temperatuur'),
 
-            html.Span('16°C.', id='temperatuur_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+            html.Span(id='temperatuur_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
 
         ],
         style={'float':'left', 'width':'24.33%','height':'250px', 'margin':'0.25%', 'background-color':'#FFFFFF', 'border':'0.1vw solid #C8D4E3', 'text-align':'center'}
@@ -143,7 +144,7 @@ layout = html.Div([
 
             html.P('Huidige lichtintensiteit'),
 
-            html.Span('135cd', id='lichtintensiteit_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+            html.Span(id='lichtintensiteit_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
 
         ],
         style={'float':'left', 'width':'24.3%', 'height':'250px', 'margin':'0.25%', 'background-color':'#FFFFFF','border':'0.1vw solid #C8D4E3', 'text-align':'center'}
@@ -153,7 +154,12 @@ layout = html.Div([
 
             html.P('Huidige tijd'),
 
-            html.Span('17:30', id='tijd_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'})
+            html.Span('17:30', id='tijd_bediening', style={'font-size': '24px', 'position':'relative', 'top':'25%'}),
+            dcc.Interval(
+                id='tijd_interval_bediening',
+                interval=1*1000,
+                n_intervals=0
+            )
 
         ],
         style={'float':'left', 'width':'24.3%', 'height':'250px', 'margin':'0.25%', 'background-color':'#FFFFFF','border':'0.1vw solid #C8D4E3', 'text-align':'center'}
