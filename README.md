@@ -21,8 +21,10 @@ Voorbeeld:
 [c] > a
 [s] > Connected!
 [c] > s
-[s] > {type: settings, rotation: 0, temperature: 0}
+[s] > {type: settings, rotation: 0}
 [c] > d
+[s] > {type: current_data, rotation: 0, temperature: 14, light_intensity: 96}
+[c] > x
 [s] > Disconnected!
 [s] > Waiting for a connection..
 ```
@@ -30,3 +32,13 @@ Voorbeeld:
 [c] = Client
 
 Op het moment is er nog geen sprake van een goede handshake protocol. Dat zal later nog toegevoegd worden.
+
+
+## Arduino aansluiting
+De componenten die nodig zijn voor het systeem zijn als volgt;
+	- Low Voltage Temperature Sensor
+	- Photoconductive Cell (GL5528)
+	- Arduino UNO
+	- LED
+
+De low voltage temperature sensor word verbonden aan analog pin 0 en de photoconductive cell word verbonden aan analog pin 1. Daarnaast is er ook een optionele LED die aangesloten kan worden aan digital pin 8 om te weergeven wanneer er een verbinding is gemaakt tussen het systeem en de client.
