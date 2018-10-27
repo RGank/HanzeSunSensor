@@ -36,9 +36,9 @@ Op het moment is er nog geen sprake van een goede handshake protocol. Dat zal la
 
 ## Arduino aansluiting
 De componenten die nodig zijn voor het systeem zijn als volgt;
-	- Low Voltage Temperature Sensor
-	- Photoconductive Cell (GL5528)
-	- Arduino UNO
-	- LED
+- Low Voltage Temperature Sensor
+- Photoconductive Cell (GL5528)
+- Arduino UNO
+- LED
 
 De low voltage temperature sensor word verbonden aan analog pin 0 en de photoconductive cell word verbonden aan analog pin 1. Daarnaast is er ook een optionele LED die aangesloten kan worden aan digital pin 8 om te weergeven wanneer er een verbinding is gemaakt tussen het systeem en de client.
