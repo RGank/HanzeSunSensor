@@ -4,3 +4,6 @@
 /C/*.cproj
 /C/Debug/
 TcfTransactionLog.csv
+
+#Python project bestanden
+*.pyc
