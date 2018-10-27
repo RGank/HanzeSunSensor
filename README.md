@@ -10,6 +10,8 @@ pip install dash-html-components
 pip install dash-core-components
 ```
 
+In de terminal: python run.py om het bestand uit te voeren
+
 ## C
 Op het moment kan het systeem alleen nog maar een simpele verbinding maken met de client als de client een willekeurige letter verstuurd.
 Zodra een verbinding tot stand is gekomen, dan is het mogelijk om doormiddel van verschillende letter combinaties data op te vragen.
