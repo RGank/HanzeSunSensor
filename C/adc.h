@@ -10,6 +10,9 @@ void adc_init()
 	
 }
 
+/*
+	Read the analog input for the specified pin
+*/
 uint16_t adc_read(uint8_t pin) {
 
 	ADMUX	&=	0xf0;

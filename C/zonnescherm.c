@@ -23,8 +23,11 @@ uint16_t rotation;
 uint16_t temperature;
 uint16_t light;
 
+
 /*
-	Attempt to make a JSON parser which Python can process
+	Print the system output like a JSON formatted array so that Python can easly use it.
+	The JSON_settings array contains the settings which the Python client can have control over.
+	TODO: Implement variables such as rotation_max, light_threshold, temperature_threshold
 */
 unsigned char get_JSON_settings(void)
 {
@@ -32,6 +35,11 @@ unsigned char get_JSON_settings(void)
 	return 0;
 }
 
+/*
+	Print the system output like a JSON formatted array so that Python can easly use it.
+	The JSON_data array contains the data obtained by the sensors.
+	TODO: Also send older data and average numbers of the variables
+*/
 unsigned char get_JSON_data(void)
 {
 	temperature = adc_read(TEMP_PIN);
@@ -43,22 +51,22 @@ unsigned char get_JSON_data(void)
 void main(void)
 {
 	
-	//Init variables
-	rotation = 0;	//TODO: Get previous rotation from SRAM
-	temperature = 0;
 	light = 0;
+	rotation = 0;			//TODO: Get previous rotation from SRAM
+	temperature = 0;
 	
-	//Set DDRB as output
-	DDRB = 0xFF;
+	DDRB = 0xFF;			//Set DDRB as output
 	
 	adc_init();				//Init ADC
 	uart_init();			//Init UART
 	stdout = &mystdout;		//Init printf()
 	
-	connection_lost();
+	connection_lost();		//Wait for a connection to be made
 	
 	while(1){
 	
+		//Wait for input by the client
+		//TODO: Can input be used as a interrupt so that the while loop would continue until there's input?
 		char input = receive();
 		
 		//Expected input: X, x
