@@ -28,9 +28,15 @@ uint16_t light;
 */
 unsigned char get_JSON_settings(void)
 {
+	printf("{type: settings, rotation: %d}\r\n", rotation);
+	return 0;
+}
+
+unsigned char get_JSON_data(void)
+{
 	temperature = adc_read(TEMP_PIN);
 	light = adc_read(LIGHT_PIN);
-	printf("{type: settings, rotation: %d, temperature: %d, light_intensity: %d}\r\n", rotation, temperature, light);
+	printf("{type: current_data, rotation: %d, temperature: %d, light_intensity: %d}\r\n", rotation, temperature, light);
 	return 0;
 }
 
@@ -55,12 +61,18 @@ void main(void)
 	
 		char input = receive();
 		
-		//Expected input: D, d
+		//Expected input: X, x
 		//Action: Disconnect
-		if(input==0x64||input==0x44){
+		if(input==0x58||input==0x78){
 			printf("Disconnected!\r\n");
 			connection_lost();
 		}
+		
+		//Expected input: D, d
+		//Action: Give the current data in JSON format
+		if(input==0x64||input==0x44){
+			get_JSON_data();
+		}			
 		
 		//Expected input: S, s
 		//Action: Give the current settings in a JSON format
