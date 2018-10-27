@@ -15,30 +15,13 @@
 
 #define UBBRVAL 51
 
-//Temperature analog pin
-#define TEMP_PIN 0
-#define LIGHT_PIN 1
-
 #include "serial.h"
 #include "connection.h"
 #include "adc.h"
 
-unsigned int rotation;
+uint16_t rotation;
 uint16_t temperature;
 uint16_t light;
-
-uint16_t adc_read(uint8_t adcx);
-
-/*
-	Print an array of characters
-*/
-void writeln(char str[]){
-	
-	for(int i=0;i<strlen(str);i++){
-		transmit(str[i]);
-	}		
-					
-}
 
 /*
 	Attempt to make a JSON parser which Python can process
@@ -59,7 +42,7 @@ void main(void)
 	temperature = 0;
 	light = 0;
 	
-	//Set DDRB as input
+	//Set DDRB as output
 	DDRB = 0xFF;
 	
 	adc_init();				//Init ADC
@@ -75,14 +58,14 @@ void main(void)
 		//Expected input: D, d
 		//Action: Disconnect
 		if(input==0x64||input==0x44){
-			writeln("Disconnected!\r\n");
+			printf("Disconnected!\r\n");
 			connection_lost();
 		}
 		
 		//Expected input: S, s
 		//Action: Give the current settings in a JSON format
 		else if(input==0x53||input==0x73){
-			writeln(get_JSON_settings());
+			get_JSON_settings();
 		}
 	
 	}

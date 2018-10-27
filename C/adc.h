@@ -1,3 +1,7 @@
+//Temperature analog pin
+#define TEMP_PIN 0
+#define LIGHT_PIN 1
+
 void adc_init()
 {
 

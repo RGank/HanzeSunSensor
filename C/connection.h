@@ -6,7 +6,7 @@ void connection_lost( void )
 {
 	PORTB = 0x00;
 	while(!(UCSR0A & (1<<RXC0))){
-		writeln("Waiting for a connection..\r\n");
+		printf("Waiting for a connection..\r\n");
 		_delay_ms(500);
 	}
 	connected();
@@ -16,5 +16,5 @@ void connection_lost( void )
 void connected( void )
 {
 	PORTB = 0x01;
-	writeln("Connected!\r\n");	
+	printf("Connected!\r\n");	
 }
