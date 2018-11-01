@@ -43,4 +43,4 @@ De componenten die nodig zijn voor het systeem zijn als volgt;
 - Arduino UNO
 - LED
 
-De low voltage temperature sensor word verbonden aan analog pin 0 en de photoconductive cell word verbonden aan analog pin 1. Daarnaast is er ook een optionele LED die aangesloten kan worden aan digital pin 8 om te weergeven wanneer er een verbinding is gemaakt tussen het systeem en de client.
+![Arduino aansluiting schema](https://raw.githubusercontent.com/Arceden/HanzeSunSensor/visualisation/Arduino_Project_bb.png)
