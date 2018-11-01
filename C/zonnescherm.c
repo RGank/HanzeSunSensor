@@ -78,6 +78,11 @@ void main(void)
 	
 	while(1){
 	
+		//TEST START
+		OCR0A = pwm;
+		pwm = pwm + 5;
+		//TEST END
+	
 		//Wait for input by the client
 		//TODO: Can input be used as a interrupt so that the while loop would continue until there's input?
 		char input = receive();
