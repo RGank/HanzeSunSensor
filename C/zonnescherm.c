@@ -22,6 +22,7 @@ uint16_t temperature;
 uint16_t light;
 
 
+
 /*
 	Print the system output like a JSON formatted array so that Python can easly use it.
 	The JSON_settings array contains the settings which the Python client can have control over.
@@ -40,7 +41,7 @@ unsigned char get_JSON_settings(void)
 */
 unsigned char get_JSON_data(void)
 {
-	temperature = adc_read(TEMP_PIN);
+	temperature = adc_read(TEMP_PIN)/10;
 	light = adc_read(LIGHT_PIN);
 	printf("{type: current_data, rotation: %d, temperature: %d, light_intensity: %d}\r\n", rotation, temperature, light);
 	return 0;
