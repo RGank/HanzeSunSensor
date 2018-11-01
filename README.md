@@ -18,8 +18,6 @@ Zodra een verbinding tot stand is gekomen, dan is het mogelijk om doormiddel van
 
 Voorbeeld:
 ```
-[s] > Waiting for a connection..
-[s] > Waiting for a connection..
 [c] > a
 [s] > Connected!
 [c] > s
@@ -28,7 +26,6 @@ Voorbeeld:
 [s] > {type: current_data, rotation: 0, temperature: 14, light_intensity: 96}
 [c] > x
 [s] > Disconnected!
-[s] > Waiting for a connection..
 ```
 [s] = Systeem
 [c] = Client

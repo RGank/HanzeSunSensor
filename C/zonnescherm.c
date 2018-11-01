@@ -30,7 +30,7 @@ uint16_t light;
 */
 unsigned char get_JSON_settings(void)
 {
-	printf("{type: settings, rotation: %d}\r\n", rotation);
+	printf("{'type': 'settings', 'rotation': %d}\r\n", rotation);
 	return 0;
 }
 
@@ -43,7 +43,7 @@ unsigned char get_JSON_data(void)
 {
 	temperature = adc_read(TEMP_PIN)/10;
 	light = adc_read(LIGHT_PIN);
-	printf("{type: current_data, rotation: %d, temperature: %d, light_intensity: %d}\r\n", rotation, temperature, light);
+	printf("{'type': 'current_data', 'rotation': %d, 'temperature': %d, 'light_intensity': %d}\r\n", rotation, temperature, light);
 	return 0;
 }
 
