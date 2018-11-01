@@ -55,6 +55,21 @@ void main(void)
 	
 	DDRB = 0xFF;			//Set DDRB as output
 	
+	///////PWM TEST START INIT
+	DDRD = 0xFF;
+	
+	// Phase Correct PWM 8 Bit, Clear OCA0 on Compare Match
+	// Set on TOP
+	TCCR0A = (1 << WGM00) | (1 << COM0A1);
+	// prescale = 64, fPWM = fCPU /(N*510)= 16E6/(64*510) = 490 Hz
+	TCCR0B = (1 << CS01) | (1 << CS00);
+	// init PWM value
+	OCR0A = 0;
+	
+	uint8_t pwm = 0;
+	
+	////PWM TEST INIT END
+	
 	adc_init();				//Init ADC
 	uart_init();			//Init UART
 	stdout = &mystdout;		//Init printf()
