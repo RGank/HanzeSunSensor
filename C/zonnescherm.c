@@ -130,8 +130,13 @@ void main(void)
 	connection_lost();		//Wait for a connection to be made
 	
 	SCH_Add_Task(input_handler, 0, 1);
-	SCH_Add_Task(update_temperature, 0, 4000);
-	SCH_Add_Task(update_light, 0, 3000);
+	
+	if(!debug){
+		SCH_Add_Task(update_temperature, 0, 4000);
+		SCH_Add_Task(update_light, 0, 3000);
+		SCH_Add_Task(get_JSON_data, 0, 6000);
+	}	
+	
 	SCH_Start();
 	
 	while(1){
