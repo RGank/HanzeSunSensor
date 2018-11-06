@@ -40,11 +40,23 @@ unsigned char get_JSON_settings(void)
 */
 unsigned char get_JSON_data(void)
 {
-	temperature = adc_read(TEMP_PIN)/10;
-	light = adc_read(LIGHT_PIN);
+	update_temperature();
+	update_light();
 	printf("{'type': 'current_data', 'rotation': %d, 'temperature': %d, 'light_intensity': %d}\r\n", rotation, temperature, light);
 	return 0;
 }
+
+//Updaters
+void update_temperature( void )
+{
+	temperature = adc_read(TEMP_PIN);
+}
+
+void update_light( void )
+{
+	light = adc_read(LIGHT_PIN);
+}
+
 
 //Setup things
 void setup( void )
