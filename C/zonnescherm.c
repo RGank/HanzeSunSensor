@@ -95,13 +95,6 @@ void input_handler()
 	//TODO: Can input be used as a interrupt so that the while loop would continue until there's input?
 	char input = receive();
 	
-	//Expected input: X, x
-	//Action: Disconnect
-	if(input==0x58||input==0x78){
-		printf("Disconnected!\r\n");
-		connection_lost();
-	}
-	
 	//Expected input: D, d
 	//Action: Give the current data in JSON format
 	if(input==0x64||input==0x44){
@@ -126,8 +119,6 @@ void main(void)
 	debug = 1;	//If debugger is true (1), all the sensors will be updated when JSON formatted data is requested
 	
 	setup();
-	
-	connection_lost();		//Wait for a connection to be made
 	
 	SCH_Add_Task(input_handler, 0, 1);
 	
