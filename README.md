@@ -9,6 +9,7 @@ pip install dash
 pip install dash-html-components
 pip install dash-core-components
 pip install pandas
+pip install serial
 ```
 
 In de terminal: python run.py om het bestand uit te voeren
