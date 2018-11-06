@@ -17,6 +17,7 @@
 #include "connection.h"
 #include "adc.h"
 
+uint8_t debug;
 uint16_t rotation;
 uint16_t temperature;
 uint16_t light;
@@ -29,19 +30,24 @@ uint16_t light;
 */
 unsigned char get_JSON_settings(void)
 {
-	printf("{'type': 'settings', 'rotation': %d}\r\n", rotation);
+	printf("{'type': 'settings', 'debug': %d, 'rotation': %d}\r\n", debug, rotation);
 	return 0;
 }
 
 /*
-	Print the system output like a JSON formatted array so that Python can easly use it.
+	Print the system output like a JSON formatted array so that Python can easily use it.
 	The JSON_data array contains the data obtained by the sensors.
 	TODO: Also send older data and average numbers of the variables
 */
 unsigned char get_JSON_data(void)
 {
-	update_temperature();
-	update_light();
+	
+	//Debugger
+	if(debug){
+		update_temperature();
+		update_light();	
+	}
+	
 	printf("{'type': 'current_data', 'rotation': %d, 'temperature': %d, 'light_intensity': %d}\r\n", rotation, temperature, light);
 	return 0;
 }
@@ -68,6 +74,9 @@ void setup( void )
 	uart_init();			//Init Serial
 	SCH_Init_T1();			//Init Scheduler
 	stdout = &mystdout;		//Init printf()
+	
+	update_light();
+	update_temperature();
 	
 }
 
@@ -112,14 +121,17 @@ void main(void)
 {
 	
 	light = 0;
-	rotation = 0;			//TODO: Get previous rotation from SRAM
+	rotation = 0;
 	temperature = 0;
+	debug = 1;	//If debugger is true (1), all the sensors will be updated when JSON formatted data is requested
 	
 	setup();
 	
 	connection_lost();		//Wait for a connection to be made
 	
 	SCH_Add_Task(input_handler, 0, 1);
+	SCH_Add_Task(update_temperature, 0, 4000);
+	SCH_Add_Task(update_light, 0, 3000);
 	SCH_Start();
 	
 	while(1){
