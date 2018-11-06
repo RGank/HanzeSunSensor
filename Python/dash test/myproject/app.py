@@ -13,11 +13,51 @@ from dash.dependencies import Input, Output
 import random
 import time
 import datetime
+import serial
+import json
+
+
+
+def portIsUsable(portName):
+    try:
+       ser = serial.Serial(port=portName)
+       return True
+    except:
+       return False
+
+
+try:
+    ser = serial.Serial('/dev/tty.usbmodem1411', 19200)
+    ser.write(b'd') # connect
+    z = ser.readline()
+except:
+    print('')
+
+
+def get_temperature_arduino():
+    ser.write(b'd')
+    data = str(ser.readline())
+    d = data[2:-5]
+    json_acceptable_string = d.replace("'", "\"")
+    temp = json.loads(json_acceptable_string)
+    temp = temp['temperature']
+    return temp
+
+def get_lightintensity_arduino():
+    ser.write(b'd')
+    data = str(ser.readline())
+    d = data[2:-5]
+    json_acceptable_string = d.replace("'", "\"")
+    temp = json.loads(json_acceptable_string)
+    temp = temp['light_intensity']
+    return temp
 
 app.layout = html.Div([
 
 
     html.Div([
+
+        html.Link(href="https://fonts.googleapis.com/css?family=Roboto", rel='stylesheet'),
 
         html.H1('DSIO Dashboard', style={'color':'#FFFFFF', 'margin-left':'10px'})
 
@@ -67,7 +107,10 @@ app.layout = html.Div([
     dcc.Interval(id='hidden_time_interval', interval=1*1000, n_intervals=0),
 
     html.Div(id='hidden_date', style={'display':'none'}),
-    dcc.Interval(id='hidden_date_interval', interval=1*5000, n_intervals=0)
+    dcc.Interval(id='hidden_date_interval', interval=1*5000, n_intervals=0),
+
+    html.Div(id='hidden_status', style={'display':'none'}),
+    dcc.Interval(id='hidden_status_interval', interval=1*5000, n_intervals=0)
 
 
 ], style={'width':'100%','background-color':'#e5e8e6','height':'100%','min-height':'1024px'})
@@ -89,7 +132,10 @@ def render_content(tab):
     [Input('hidden_temp_interval', 'n_intervals')]
 )
 def update_temp(n):
-    temp = round(random.randint(0, 3000)/100, 1)
+    if portIsUsable("/dev/tty.usbmodem1411"):
+        temp = get_temperature_arduino()
+    else:
+        temp = 'N'
     return '{}°C.'.format(temp)
 
 # update light
@@ -98,7 +144,10 @@ def update_temp(n):
     [Input('hidden_light_interval', 'n_intervals')]
 )
 def update_light(n):
-    light = round(random.randint(0, 200))
+    if portIsUsable("/dev/tty.usbmodem1411"):
+        light = get_lightintensity_arduino()
+    else:
+        light = "N"
     return light
 
 # update time
@@ -118,3 +167,14 @@ def update_time(n):
 def update_date(n):
     current_date = datetime.datetime.now().strftime('%d/%m/%y')
     return current_date
+
+# update status
+@app.callback(
+    Output('hidden_status', 'children'),
+    [Input('hidden_status_interval', 'n_intervals')]
+)
+def update_status(n):
+    if portIsUsable("/dev/tty.usbmodem1411"):
+        return "aangesloten"
+    else:
+        return "niet aangesloten"
