@@ -22,9 +22,8 @@ uint16_t temperature;
 uint16_t light;
 
 
-
 /*
-	Print the system output like a JSON formatted array so that Python can easly use it.
+	Print the system output like a JSON formatted array so that Python can easily use it.
 	The JSON_settings array contains the settings which the Python client can have control over.
 	TODO: Implement variables such as rotation_max, light_threshold, temperature_threshold
 */
@@ -47,6 +46,56 @@ unsigned char get_JSON_data(void)
 	return 0;
 }
 
+//Setup things
+void setup( void )
+{
+	
+	DDRB = 0xFF;			//Set DDRB as output
+	
+	adc_init();				//Init Analog to Digital Converter
+	uart_init();			//Init Serial
+	SCH_Init_T1();			//Init Scheduler
+	stdout = &mystdout;		//Init printf()
+	
+}
+
+/************************************************************************/
+/* Input handler														*/
+/************************************************************************/
+void input_handler()
+{
+
+	//Return if there is nothing incoming on RX
+	if(!message_incomming()){
+		return 0;
+	}
+	
+	//Wait for input by the client
+	//TODO: Can input be used as a interrupt so that the while loop would continue until there's input?
+	char input = receive();
+	
+	//Expected input: X, x
+	//Action: Disconnect
+	if(input==0x58||input==0x78){
+		printf("Disconnected!\r\n");
+		connection_lost();
+	}
+	
+	//Expected input: D, d
+	//Action: Give the current data in JSON format
+	if(input==0x64||input==0x44){
+		get_JSON_data();
+	}
+	
+	//Expected input: S, s
+	//Action: Give the current settings in a JSON format
+	else if(input==0x53||input==0x73){
+		get_JSON_settings();
+	}
+	
+	
+}
+
 void main(void)
 {
 	
@@ -54,39 +103,17 @@ void main(void)
 	rotation = 0;			//TODO: Get previous rotation from SRAM
 	temperature = 0;
 	
-	DDRB = 0xFF;			//Set DDRB as output
-	
-	adc_init();				//Init ADC
-	uart_init();			//Init UART
-	stdout = &mystdout;		//Init printf()
+	setup();
 	
 	connection_lost();		//Wait for a connection to be made
 	
+	SCH_Add_Task(input_handler, 0, 1);
+	SCH_Start();
+	
 	while(1){
+		SCH_Dispatch_Tasks();
+	}		
 	
-		//Wait for input by the client
-		//TODO: Can input be used as a interrupt so that the while loop would continue until there's input?
-		char input = receive();
-		
-		//Expected input: X, x
-		//Action: Disconnect
-		if(input==0x58||input==0x78){
-			printf("Disconnected!\r\n");
-			connection_lost();
-		}
-		
-		//Expected input: D, d
-		//Action: Give the current data in JSON format
-		if(input==0x64||input==0x44){
-			get_JSON_data();
-		}			
-		
-		//Expected input: S, s
-		//Action: Give the current settings in a JSON format
-		else if(input==0x53||input==0x73){
-			get_JSON_settings();
-		}
-	
-	}
+	return 0;
 		
 }
