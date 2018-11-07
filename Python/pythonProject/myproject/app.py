@@ -55,6 +55,12 @@ def get_lightintensity_arduino(port):
     temp = temp['light_intensity']
     return temp
 
+def conv_light():
+    light_sen = get_lightintensity_arduino()
+    light = light_sen * 4.98
+    light /= 1023
+    return light
+
 app.layout = html.Div([
 
 
