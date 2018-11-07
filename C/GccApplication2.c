@@ -17,25 +17,23 @@
 #define F_CPU 16E6
 #include "distance.h"
 #include "serial.h"
-#define TRIGpin 0
 
 static volatile int gv_echo = 0; // a 16 bit flag
 static volatile int gv_count = 0;
 uint8_t distance = 0;
-int working;
 
 
 void init_ports(void)
 {
-	DDRD = 0b11111011;			//Set TRIG pin on output (PIN 0) and set ECHO pin on input (PIN 2)
+	DDRD = 0b11110111;			//Set TRIG pin on output (PIN 0) and set ECHO pin on input (PIN 2)
 	_delay_ms(50);
 
 }
 
 void Initialize_external_interrupt(void)
 {
-	EIMSK |= (1 << INT0);	// enable INT0
-	EICRA |= (1 << ISC10);	// set INT0 to trigger while rising edge = HIGH
+	EIMSK |= (1 << INT1);	// enable INT0
+	EICRA |= (1 << ISC11);	// set INT0 to trigger while rising edge = HIGH
 }
 
 void init_timer()
@@ -43,27 +41,37 @@ void init_timer()
 // normal mode, no prescale, stop timer
 {
 	cli();				//Clear interrupts
-	TCCR1B = 0;			//Set timer to 0
-	
+	TCCR1A = 0;			//Set timer to 0
 }
 
 uint16_t Pulse()
 {
 
 		//Restart HC-SR04 by setting TRIG pin back to LOW
-		_delay_ms(100);
-		PORTD &= ~(1 <<TRIGpin);
-		//Send a pulse
+		_delay_ms(50);
+		PORTD &= ~(1 <<PIND1);
 		_delay_us(1);
-		PORTD |=(1<<TRIGpin);	//Set PIN 0 HIGH
-		_delay_us(15);
-		PORTD &= ~(1<<TRIGpin); //Set PIN 0 LOW
+		//Send a pulse
+		PORTD |=(1<<PIND1);	//Set PIN 0 HIGH
+		_delay_us(10);
+		PORTD &= ~(1<<PIND1); //Set PIN 0 LOW
 			
 }	
 
 uint16_t calc_cm()
 {
-	distance = gv_echo;		//Convert the distance in us to cm
+	/*Convert the distance in us to cm			
+	
+	Formula:	Distance = Time * Speed
+	Speed from HC SR04 = 340 m/s (speed of sound)
+	340 m/s = 0.034 us/cm
+	Time = gv_echo
+	Distance = (gv_echo * 0.034) / 2
+	
+	U divide by 2 because the pulse travels forwards and back
+	
+	*/													
+	distance = ((gv_echo*0.034)/2);											
 }
 
 
@@ -74,8 +82,9 @@ int main(void)
 	Initialize_external_interrupt();	//Init interrupts
 	uart_init();						//Init UART
 	stdout = &mystdout;
-	sei();								//enable interrupts
-	
+	sei();
+									//enable interrupts
+
 	while (1)
 	{
 		Pulse();
@@ -84,21 +93,23 @@ int main(void)
 	}
 }
 
-ISR (INT0_vect)
+ISR (INT1_vect)
 {
-	if (gv_count==1)//when logic from HIGH to LOW
-	{
-		
-		TCCR1B = 0;					//disabling counter
-		gv_echo = TCNT1;			//count memory is updated to integer
-		TCNT1 = 0;					//resetting the counter memory
-		gv_count = 0;				//Set count to 0
+	if (gv_count==1)				//when logic from HIGH to LOW
+		{
 			
-	}
+			TCCR1B = 0;					//disabling counter
+			gv_echo = TCNT1;			//count memory is updated to integer
+			TCNT1= 0;					//resetting the counter memory
+			gv_count = 0;				//Set count to 0
+			
+			
+		}
 
 	if (gv_count==0)				//when logic change from LOW to HIGH
-	{
-		TCCR1B |= _BV(CS10);		//enabling counter (TCNT1) without any prescaling
-		gv_count=1;					//Set count to 1
-	}
+		{
+			TCCR1B |= _BV(CS10);		//enabling counter (TCNT1) without any prescaling
+			gv_count=1;					//Set count to 1
+		}
 }
+
