@@ -99,14 +99,19 @@ void input_handler()
 	//Action: Give the current data in JSON format
 	if(input==0x64||input==0x44){
 		get_JSON_data();
+		return 0;
 	}
 	
 	//Expected input: S, s
 	//Action: Give the current settings in a JSON format
 	else if(input==0x53||input==0x73){
 		get_JSON_settings();
+		return 0;
 	}
 	
+	
+	//Wrong input
+	printf("null\r\n");
 	
 }
 
