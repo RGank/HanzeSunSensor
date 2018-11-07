@@ -16,17 +16,19 @@ import datetime
 import serial
 import json
 
-def port_is_usable():
+ser = serial.Serial('/dev/tty.usbmodem1411', 19200)
+
+'''def port_is_usable():
     try:
-        ser = serial.Serial('/dev/tty.usbmodem1411', 19200)
-        return True
+        global ser
+        if not ser:
+            ser = serial.Serial('/dev/tty.usbmodem1411', 19200)
+            return True
     except Exception:
         return False
 
-try:
-    ser = serial.Serial('/dev/tty.usbmodem1411', 19200)
-except Exception:
-    ser = 'N'
+port_is_usable()'''
+
 
 
 def get_temperature_arduino(port):
@@ -137,6 +139,8 @@ def update_temp(n):
     temp = round(conv_temp(temp), 2)
     return '{}°C.'.format(temp)
 
+
+
 # update light
 @app.callback(
     Output('hidden_light', 'children'),
@@ -145,6 +149,7 @@ def update_temp(n):
 def update_light(n):
     light = get_lightintensity_arduino(ser)
     return light
+
 
 # update time
 @app.callback(
@@ -170,7 +175,4 @@ def update_date(n):
     [Input('hidden_status_interval', 'n_intervals')]
 )
 def update_status(n):
-    if ser is not "N":
-        return html.Span(children="aangesloten", style={"color":"green"})
-    else:
-        return html.Span(children="niet aangesloten", style={'color':'red'})
+    return html.Span(children="aangesloten", style={"color":"green"})
